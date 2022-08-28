@@ -1,6 +1,7 @@
 from venv import create
 import pygame
 import numpy as np
+from LedCreatorScript import LedCreator
 
 pygame.init()
 
@@ -20,30 +21,7 @@ kasa_radius = int(300)
 
 win = pygame.display.set_mode((screenwidth, screenheight))
 
-class LedCreator:
-    def __init__(self, position, idx, win):
-        self.position = position
-        self.idx = idx
-        self.win = win
-        self.color = [100, 100, 100]
-        self.radius = 4
 
-
-    def add_animation(self, color, duration, win):
-        pass
-
-    def wait_for_all_animations():
-        pass
-
-    def draw(self):
-        pygame.draw.circle(self.win, self.color, self.position, self.radius)
-
-
-def draw_background():
-    color = [10,10,10]
-    position = [int(screenwidth/2), int(screenheight/2)]
-    #radius = 300
-    pygame.draw.circle(win, color, position, int(kasa_radius))
 
 
 def sin(deg):
@@ -93,11 +71,14 @@ def create_leds(leds):
         leds[i+34*3] = LedCreator(pos.astype(int), i, win)
         pos = pos+dxy
 
+def draw_background():
+    color = [10,10,10]
+    position = [int(screenwidth/2), int(screenheight/2)]
+    #radius = 300
+    pygame.draw.circle(win, color, position, int(kasa_radius))
+
 create_leds(leds)
 
-#led1 = LedCreator([100, 100], 0, win)
-
-#leds[0].draw()
 draw_background()
 
 pygame.display.update()
