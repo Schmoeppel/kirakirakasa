@@ -1,11 +1,13 @@
-from venv import create
 import pygame
 import numpy as np
-from LedCreatorScript import LedCreator
+from animation_creator_class import AnimationCreator
+from led_creator_class import LedCreator
+from animation_class import Animation
+
 
 pygame.init()
 
-
+a = AnimationCreator(100)
 
 
 # time_adjustment = pygame.time.get_ticks() - start_second*1000
