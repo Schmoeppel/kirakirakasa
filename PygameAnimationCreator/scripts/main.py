@@ -4,16 +4,28 @@ from animation_creator_class import AnimationCreator
 from led_creator_class import LedCreator
 from animation_class import Animation
 
-
+a = [[1], [2], [3]]
+#print(a)
 pygame.init()
 
-a = AnimationCreator(100)
+AnimationCreator = AnimationCreator(3)
+
+AnimationCreator.set_led_in_seq(2, [1,2,3])
+
+AnimationCreator.wait(2, 0.5)
+#AnimationCreator.add_empty_line()
+AnimationCreator.print_animation()
+
+print(AnimationCreator.animation_sequence.shape)
+print(AnimationCreator.animation_row_pointers)
+
 
 
 # time_adjustment = pygame.time.get_ticks() - start_second*1000
 
-#from sqlalchemy import true
+# from sqlalchemy import true
 
+'''
 num_of_leds = 136
 
 screenwidth = 1200
@@ -22,8 +34,6 @@ screenheight = 680
 kasa_radius = int(300)
 
 win = pygame.display.set_mode((screenwidth, screenheight))
-
-
 
 
 def sin(deg):
@@ -36,9 +46,10 @@ def cos(deg):
 pygame.display.set_caption("KiraKiraKasa Animation Simulator")
 
 clock = pygame.time.Clock()
-#clock.tick(27)
+# clock.tick(27)
 
 leds = [None]*num_of_leds
+
 def create_leds(leds):
     x_center = int(screenwidth/2)
     y_center = int(screenheight/2)
@@ -109,3 +120,4 @@ while is_running:
 
 pygame.quit()
 print("pygame closed correclty")
+'''

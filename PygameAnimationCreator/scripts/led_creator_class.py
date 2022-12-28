@@ -1,5 +1,6 @@
 import pygame
 
+
 class LedCreator:
     def __init__(self, position, idx, win):
         self.position = position
