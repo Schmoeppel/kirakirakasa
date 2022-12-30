@@ -4,28 +4,24 @@ from animation_creator_class import AnimationCreator
 from animation_class import Animation
 from matrix_handler import MatrixHandler
 
-real_matrix = np.array([[1,2,3], 
-                        [4,5,6]])
+led_matrix = np.array([[4, 15, 24, 35, 5, 14, 25, 34], 
+                        [3, 16, 23, 36, 6, 13, 26, 33],
+                        [2, 17, 22, 37, 7, 12, 27, 32],
+                        [1, 18, 21, 38, 8, 11, 28, 31],
+                        [0, 19, 20, 39, 9, 10, 29, 30]])
 
-user_matrix = np.array([[1, 3, 5],
-                        [2, 4, 6]])
-
-leds = MatrixHandler(real_matrix, user_matrix)
-
-leds.check_matrix_sizes()
+num_leds = led_matrix.size
 
 pygame.init()
 
-AnimationCreator = AnimationCreator(3)
+AnimationCreator = AnimationCreator(num_leds)
 
-AnimationCreator.set_led_in_seq(2, [1,2,3])
-
-AnimationCreator.wait(2, 0.5)
-#AnimationCreator.add_empty_line()
-AnimationCreator.print_animation()
-
-print(AnimationCreator.animation_sequence.shape)
+AnimationCreator.set_light(led_matrix[3:, 0:2], [1,2,3])
+AnimationCreator.wait_for_all_leds()
+AnimationCreator.fade_light(0, [100,100,100], 1)
+#print(AnimationCreator.animation_sequence.shape)
 print(AnimationCreator.animation_row_pointers)
+AnimationCreator.print_animation()
 
 
 
