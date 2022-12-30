@@ -1,11 +1,19 @@
 import pygame
 import numpy as np
 from animation_creator_class import AnimationCreator
-from led_creator_class import LedCreator
 from animation_class import Animation
+from matrix_handler import MatrixHandler
 
-a = [[1], [2], [3]]
-#print(a)
+real_matrix = np.array([[1,2,3], 
+                        [4,5,6]])
+
+user_matrix = np.array([[1, 3, 5],
+                        [2, 4, 6]])
+
+leds = MatrixHandler(real_matrix, user_matrix)
+
+leds.check_matrix_sizes()
+
 pygame.init()
 
 AnimationCreator = AnimationCreator(3)
