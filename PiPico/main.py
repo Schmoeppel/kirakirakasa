@@ -50,23 +50,21 @@ animation_path = "/sd/animation_"+str(cur_animation)+".txt"
 f = open(animation_path, "rb")
 
 # Main loop
-t0 = time.ticks_ms()
 while True:
-    if button.value() == 0:       #key press
+    if button.value() == 0:       #key pressed, play next animation
         f.close()
         cur_animation += 1
         animation_path = "/sd/animation_"+str(cur_animation)+".txt"
         f = open(animation_path, "rb")
-    #sleep(0.001)
+
     data = f.readline()
     next_led_data = [x for x in data]
 
-    if (next_led_data == []): # sequence ended
+    if (next_led_data == []): # sequence ended, restart
         f.close()
         f = open(animation_path, "rb")
         data = f.readline()
         next_led_data = [x for x in data]
-        #break
     
     led_idx = 0
     for led_color in range(0, num_of_leds*3-2, 3):
@@ -75,11 +73,6 @@ while True:
         led_handler.set_leds_color(led_idx, color)
         led_idx += 1
     led_handler.light_leds()
-    
-    
-t1 = time.ticks_ms()
-
-print("Time it took: " + str(t1-t0))
 
 
     
