@@ -1,10 +1,19 @@
-from time import sleep
-import time
+"""
+Kirakirakasa
+==============
+
+This project controls an LED strip to illuminate an umbrella with preprogrammed patterns from an SD card using a PiPico.
+
+Author:
+- Thomas Killus (TKillussecond@gmail.com)
+
+License:
+- This project is licensed under the MIT License. See the LICENSE file for details.
+"""
 
 from machine import Pin, SPI
 import sdcard
 import os
-from utime import sleep_ms
 
 from led_handler import led_handler
 
