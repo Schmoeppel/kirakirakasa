@@ -2,126 +2,301 @@ import pygame
 import numpy as np
 from animation_creator_class import AnimationCreator
 from animation_class import Animation
-from matrix_handler import MatrixHandler
+import random
 
-led_matrix = np.array([[4, 15, 24, 35, 5, 14, 25, 34], 
-                        [3, 16, 23, 36, 6, 13, 26, 33],
-                        [2, 17, 22, 37, 7, 12, 27, 32],
-                        [1, 18, 21, 38, 8, 11, 28, 31],
-                        [0, 19, 20, 39, 9, 10, 29, 30]])
+fps = 20
+speed = 1.0
+start_time = 0.0
+file_name = "10_animation"
+led_matrix = np.array([ [16, 51, 84, 119, 17, 50, 85, 118],
+                        [15, 52, 83, 120, 18, 49, 86, 117],
+                        [14, 53, 82, 121, 19, 48, 87, 116],
+                        [13, 54, 81, 122, 20, 47, 88, 115],
+                        [12, 55, 80, 123, 21, 46, 89, 114],
+                        [11, 56, 79, 124, 22, 45, 90, 113],
+                        [10, 57, 78, 125, 23, 44, 91, 112],
+                        [9, 58, 77, 126, 24, 43, 92, 111],
+                        [8, 59, 76, 127, 25, 42, 93, 110],
+                        [7, 60, 75, 128, 26, 41, 94, 109],
+                        [6, 61, 74, 129, 27, 40, 95, 108],
+                        [5, 62, 73, 130, 28, 39, 96, 107],
+                        [4, 63, 72, 131, 29, 38, 97, 106], 
+                        [3, 64, 71, 132, 30, 37, 98, 105],
+                        [2, 65, 70, 133, 31, 36, 99, 104],
+                        [1, 66, 69, 134, 32, 35, 100, 103],
+                        [0, 67, 68, 135, 33, 34, 101, 102]])
 
 num_leds = led_matrix.size
 
 pygame.init()
 
-AnimationCreator = AnimationCreator(num_leds)
-
-AnimationCreator.set_light(led_matrix[3:, 0:2], [1,2,3])
-AnimationCreator.wait_for_all_leds()
-AnimationCreator.fade_light(0, [100,100,100], 1)
-#print(AnimationCreator.animation_sequence.shape)
-print(AnimationCreator.animation_row_pointers)
-AnimationCreator.print_animation()
+animation_creator = AnimationCreator(num_leds, fps, speed)
 
 
+#Create Sequence here ==================
+''' 
+examples
+animation_creator.set_light(led_matrix[3:, 0:2], [1,200,3])
+animation_creator.wait(led_matrix[:, :], 3)
+animation_creator.fade_light(led_matrix[:, 4:], [10,0,10], 10)
+animation_creator.wait_for_all_leds()
+'''
 
-# time_adjustment = pygame.time.get_ticks() - start_second*1000
+####################
 
-# from sqlalchemy import true
+def random_color():
+    color_choose = random.randint(0,3)
+    if color_choose == 0:
+        color = [100, 100, 255]
+    if color_choose == 1:
+        color = [50, 10, 255]
+    if color_choose == 2:
+        color = [10, 255, 10]
+    if color_choose == 3:
+        color = [255, 255, 100]
+    return color
+
+def rainbow_color(i):
+    f = (i / 255.0)
+    r = int(abs(f*255.0-255.0))
+    g = int(abs(f*255.0-170.0))
+    b = int(abs(f*255.0-85.0))
+    return [r, g, b]
+
+def rainbow_color2(i):
+    x = (i / 255.0)
+    r = int(255/(1+3*x**2)) + int(255/(1+200*(x-1)**2))
+    g = int(255*4*(-x**2+x))
+    b = int(255/(1+3*(x-1)**2))
+
+    r = min(max(r, 0), 255)
+    g = min(max(g, 0), 255)
+    b = min(max(b, 0), 255)
+
+    return [r, g, b]
+
+for i in range(15):
+    print(rainbow_color2(i))
+
+total_rows = 17
+total_columns = 8
+highest_row = total_rows - 1
+highest_column = total_columns - 1
+
+
+#for color_idx in range(255):
+#    animation_creator.set_light(led_matrix[0, :], rainbow_color2(color_idx))
+
+
+#animation_creator.fade_light(led_matrix[:, 7], [0,0,0], 2)
+#animation_creator.fade_light(led_matrix[:, 0], [10,0,200], 2)
+#animation_creator.wait_for_all_leds()
+
+total_steps = 10
+for step in range(total_steps):
+    color_shift = 255/total_steps*1
+    for row in range(total_rows):
+        color_int = (color_shift*step + (255/total_rows*row))%255
+        animation_creator.fade_light(led_matrix[row, :], rainbow_color2(color_int), 0.2)
+
+animation_creator.wait_for_all_leds()
+
+
+#################
+
+
+animation_creator.wait_for_all_leds()
+
+
+print(animation_creator.animation_row_pointers)
+#animation_creator.print_animation()
+
+
+animation = Animation(led_matrix, animation_creator.fps)
+animation.set_sequence(animation_creator.get_sequence())
+
+#animation.create_txt(file_name)
+animation.create_binary(file_name)
+
+#animation.create_square_layout(spacing=17, led_radius=4)
+animation.create_circular_layout(spacing=17, led_radius=4)
+animation.run_preview(start_time=start_time)
+
 
 '''
-num_of_leds = 136
-
-screenwidth = 1200
-screenheight = 680
-
-kasa_radius = int(300)
-
-win = pygame.display.set_mode((screenwidth, screenheight))
+# turn off and stay off (animation_0)
+animation_creator.fade_light(led_matrix[:, :], [0,0,0], 2)
+animation_creator.wait_for_all_leds()
+'''
 
 
-def sin(deg):
-    return np.sin(np.deg2rad(deg))
+'''
+# fade through columns
+animation_creator.fade_light(led_matrix[:, 7], [0,0,0], 2)
+animation_creator.fade_light(led_matrix[:, 0], [10,0,200], 2)
+animation_creator.wait_for_all_leds()
 
-def cos(deg):
-    return np.cos(np.deg2rad(deg))
+for i in range(7):
+    animation_creator.fade_light(led_matrix[:, i], [0,0,0], 2)
+    animation_creator.fade_light(led_matrix[:, i+1], [0,0,200], 2)
+    animation_creator.wait_for_all_leds()
+
+animation_creator.wait_for_all_leds()
+'''
+
+'''
+# fade through all rows
+animation_creator.fade_light(led_matrix[0, :], [10,0,200], 2)
+
+for i in range(16):
+    animation_creator.fade_light(led_matrix[i, :], [0,0,0], 2)
+    animation_creator.fade_light(led_matrix[i+1, :], [0,0,200], 2)
+
+    animation_creator.fade_light(led_matrix[(i+8)%16, :], [0,0,0], 2)
+    animation_creator.fade_light(led_matrix[(i+9)%16, :], [0,0,200], 2)
+
+    animation_creator.wait_for_all_leds()
+animation_creator.fade_light(led_matrix[16, :], [0,0,0], 2)
+
+animation_creator.wait_for_all_leds()
+'''
+
+'''
+# Magma
+for i in range(20):
+    for idx in range(num_leds):
+        dur = random.uniform(0.5, 2.0)
+        red = random.randint(0,255)
+        green = random.randint(0,255)
+        blue = random.randint(0,255)
+        animation_creator.fade_light(idx, [red, 0*green, 0*blue], dur)
+animation_creator.wait_for_all_leds()
+'''
+
+'''
+# wave through kasa
+rows = len(led_matrix)
+for i in range(5):
+    for i in range(rows-1, -1, -1):
+        animation_creator.fade_light(led_matrix[i, 5:], [0,200,0], 0.5)
+        animation_creator.wait_for_all_leds()
+    animation_creator.fade_light(led_matrix[:, 0], [0,200,0], 0.5)
+    animation_creator.fade_light(led_matrix[:, 4], [0,200,0], 0.5)
+    animation_creator.wait_for_all_leds()
+    for i in range(rows):
+        animation_creator.fade_light(led_matrix[i, :4], [0,200,0], 0.5)
+        animation_creator.wait_for_all_leds()
+
+    for i in range(rows-1, -1, -1):
+        animation_creator.fade_light(led_matrix[i, 5:], [200,0,0], 0.5)
+        animation_creator.wait_for_all_leds()
+    animation_creator.fade_light(led_matrix[:, 0], [200,0,0], 0.5)
+    animation_creator.fade_light(led_matrix[:, 4], [200,0,0], 0.5)
+    animation_creator.wait_for_all_leds()
+    for i in range(rows):
+        animation_creator.fade_light(led_matrix[i, :4], [200,0,0], 0.5)
+        animation_creator.wait_for_all_leds()
+
+animation_creator.wait_for_all_leds()
+'''
+
+'''
+# double waves
+rows = len(led_matrix)
+for i in range(5):
+    for i in range(rows-1, -1, -1):
+        animation_creator.fade_light(led_matrix[i, 5:], [0,200,0], 0.5)
+        animation_creator.fade_light(led_matrix[rows-1-i, 0:5], [200,0,0], 0.5)
+        animation_creator.wait_for_all_leds()
+    #animation_creator.fade_light(led_matrix[:, 0], [0,200,0], 0.5)
+    #animation_creator.fade_light(led_matrix[:, 4], [0,200,0], 0.5)
+    animation_creator.wait_for_all_leds()
+    for i in range(rows):
+        animation_creator.fade_light(led_matrix[i, :5], [0,200,0], 0.5)
+        animation_creator.fade_light(led_matrix[rows-1-i, 5:], [200,0,0], 0.5)
+        animation_creator.wait_for_all_leds()
+
+    #animation_creator.fade_light(led_matrix[:, 0], [200,0,0], 0.5)
+    #animation_creator.fade_light(led_matrix[:, 4], [200,0,0], 0.5)
+    animation_creator.wait_for_all_leds()
+
+animation_creator.wait_for_all_leds()
+'''
 
 
-pygame.display.set_caption("KiraKiraKasa Animation Simulator")
+'''
+# rainbow waves
+for i in range(17-2):
+    animation_creator.fade_light(led_matrix[i, :], rainbow_color2(i), 0.1)
+    animation_creator.fade_light(led_matrix[i+1, :], rainbow_color2(i), 0.1)
+    animation_creator.fade_light(led_matrix[i+2, :], rainbow_color2(i), 0.1)
 
-clock = pygame.time.Clock()
-# clock.tick(27)
-
-leds = [None]*num_of_leds
-
-def create_leds(leds):
-    x_center = int(screenwidth/2)
-    y_center = int(screenheight/2)
-
-    pos = np.array([int(x_center), int(y_center - kasa_radius)])
-    dxy = np.array([0,kasa_radius*2/33])
-    for i in range(34):
-        leds[i] = LedCreator(pos.astype(int), i, win)
-        pos = pos+dxy
-
-    pos = np.array([x_center+sin(45)*int(kasa_radius),
-                    y_center + cos(45)*int(kasa_radius)])
-    dxy = np.array([-sin(45)*int(kasa_radius)*2/33,
-                    -cos(45)*int(kasa_radius)*2/33
-                    ])
-    for i in range(34):
-        leds[i+34*1] = LedCreator(pos.astype(int), i, win)
-        pos = pos+dxy
-
-    pos = np.array([int(x_center - kasa_radius), int(y_center)])
-    dxy = np.array([kasa_radius*2/33, 0])
-    for i in range(34):
-        leds[i+34*2] = LedCreator(pos.astype(int), i, win)
-        pos = pos+dxy
-
-    pos = np.array([x_center+sin(45)*int(kasa_radius),
-                    y_center - cos(45)*int(kasa_radius)])
-    dxy = np.array([-sin(45)*int(kasa_radius)*2/33,
-                    +cos(45)*int(kasa_radius)*2/33
-                    ])
-    for i in range(34):
-        leds[i+34*3] = LedCreator(pos.astype(int), i, win)
-        pos = pos+dxy
-
-def draw_background():
-    color = [10,10,10]
-    position = [int(screenwidth/2), int(screenheight/2)]
-    #radius = 300
-    pygame.draw.circle(win, color, position, int(kasa_radius))
-
-create_leds(leds)
-
-draw_background()
-
-pygame.display.update()
+    animation_creator.fade_light(led_matrix[(i+7)%17, :], rainbow_color2(i), 0.1)
+    animation_creator.fade_light(led_matrix[(i+8)%17, :], rainbow_color2(i), 0.1)
+    animation_creator.fade_light(led_matrix[(i+9)%17, :], rainbow_color2(i), 0.1)
 
 
-is_running = True
+
+    animation_creator.wait_for_all_leds()
+    animation_creator.fade_light(led_matrix[i, :], [0,0,0], 0.1)
+    animation_creator.fade_light(led_matrix[(i+7)%17, :], [0,0,0], 0.1)
+
+animation_creator.fade_light(led_matrix[15, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[16, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[0, :], rainbow_color2(14), 0.1)
+
+animation_creator.fade_light(led_matrix[5, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[6, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[7, :], rainbow_color2(14), 0.1)
+
+animation_creator.wait_for_all_leds()
+animation_creator.fade_light(led_matrix[15, :], [0,0,0], 0.1)
+animation_creator.fade_light(led_matrix[5, :], [0,0,0], 0.1)
+
+animation_creator.fade_light(led_matrix[16, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[0, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[1, :], rainbow_color2(14), 0.1)
+
+animation_creator.fade_light(led_matrix[6, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[7, :], rainbow_color2(14), 0.1)
+animation_creator.fade_light(led_matrix[8, :], rainbow_color2(14), 0.1)
+
+animation_creator.wait_for_all_leds()
+animation_creator.fade_light(led_matrix[16, :], [0,0,0], 0.1)
+animation_creator.fade_light(led_matrix[6, :], [0,0,0], 0.1)'''
 
 
-while is_running:
-    for led in leds:
-        led.draw()
-    pygame.display.update()
+'''
+# static rainbow
+total_steps = 50
+for step in range(total_steps):
+    color_shift = 255/total_steps*5
+    color_int = (color_shift*step)%255
+    for column in range(total_columns):
+        animation_creator.fade_light(led_matrix[:, column], rainbow_color2(color_int), 0.2)
+'''
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            is_running = False
+'''
+# column rainbow
 
-    keys = pygame.key.get_pressed()
+total_steps = 50
+for step in range(total_steps):
+    color_shift = 255/total_steps*5
+    for column in range(total_columns):
+        color_int = (color_shift*step + (255/total_columns*column))%255
+        animation_creator.fade_light(led_matrix[:, column], rainbow_color2(color_int), 0.2)
 
-    if keys[pygame.K_SPACE]:
-        pass
+animation_creator.wait_for_all_leds()
+'''
 
-    if keys[pygame.K_LEFT]:
-        pass
+'''
+# row rainbow
+total_steps = 10
+for step in range(total_steps):
+    color_shift = 255/total_steps*1
+    for row in range(total_rows):
+        color_int = (color_shift*step + (255/total_rows*row))%255
+        animation_creator.fade_light(led_matrix[row, :], rainbow_color2(color_int), 0.2)
 
-
-pygame.quit()
-print("pygame closed correclty")
+animation_creator.wait_for_all_leds()
 '''

@@ -4,6 +4,7 @@ import time
 from machine import Pin, SPI
 import sdcard
 import os
+from utime import sleep_ms
 
 from led_handler import led_handler
 
@@ -19,55 +20,46 @@ def init_sd():
     # Mount the SD card
     os.mount(sd,'/sd')
 
-    # remove all existing files
-    #for file in os.listdir('/sd'):
-    #    os.remove("/sd/" + file)
-
     # Debug print SD card directory and files
     print(os.listdir('/sd'))
 
 
 init_sd()
 
-
-
 num_of_leds = 136
 led_handler = led_handler(4, num_of_leds)
+button = Pin(0, Pin.IN, Pin.PULL_UP)   #Internal pull-up
 
 global next_led_data
 next_led_data = [0]
 
-f = open("/sd/test_file.txt", "rb")
+cur_animation = 0
+animation_path = "/sd/animation_"+str(cur_animation)+".txt"
 
-read_line_num = 0
-
-#while True:
-#    led_handler.light_all_leds([100, 0, 0])
+f = open(animation_path, "rb")
 
 # Main loop
 t0 = time.ticks_ms()
 while True:
-    #print(read_line_num)
-    read_line_num+=1
-    #print(next_led_data)
-    sleep(0.02)
-    data = f.readline()
-    #print(data)
-    #print("read next line")
-    #f.close()
-    next_led_data = [x for x in data]
-    #next_led_data = [int.from_bytes(x, 'big') for x in data]
-    
-    
-    if (next_led_data == []):
+    if button.value() == 0:       #key press
         f.close()
-        break
+        cur_animation += 1
+        animation_path = "/sd/animation_"+str(cur_animation)+".txt"
+        f = open(animation_path, "rb")
+    #sleep(0.001)
+    data = f.readline()
+    next_led_data = [x for x in data]
+
+    if (next_led_data == []): # sequence ended
+        f.close()
+        f = open(animation_path, "rb")
+        data = f.readline()
+        next_led_data = [x for x in data]
+        #break
     
     led_idx = 0
     for led_color in range(0, num_of_leds*3-2, 3):
         
-        #print(led_color)
-        #print(next_led_data)
         color = [next_led_data[led_color], next_led_data[led_color+1], next_led_data[led_color+2]]
         led_handler.set_leds_color(led_idx, color)
         led_idx += 1
@@ -85,3 +77,4 @@ print("Time it took: " + str(t1-t0))
 
 
  
+
