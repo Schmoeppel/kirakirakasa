@@ -36,8 +36,10 @@ def init_sd():
 init_sd()
 
 num_of_leds = 136
-led_handler = led_handler(4, num_of_leds)
-button = Pin(0, Pin.IN, Pin.PULL_UP)   #Internal pull-up
+LED_PIN = 4
+BUTTON_PIN = 0
+led_handler = led_handler(LED_PIN, num_of_leds)
+button = Pin(BUTTON_PIN, Pin.IN, Pin.PULL_UP)   #Internal pull-up
 
 global next_led_data
 next_led_data = [0]
