@@ -64,22 +64,23 @@ def rainbow_color2(i):
 
     return [r, g, b]
 
-for i in range(15):
-    print(rainbow_color2(i))
-
 total_rows = 17
 total_columns = 8
 highest_row = total_rows - 1
 highest_column = total_columns - 1
 
-total_steps = 10
-for step in range(total_steps):
-    color_shift = 255/total_steps*1
-    for row in range(total_rows):
-        color_int = (color_shift*step + (255/total_rows*row))%255
-        animation_creator.fade_light(led_matrix[row, :], rainbow_color2(color_int), 0.2)
+#################
+# Create animations here.
 
-animation_creator.wait_for_all_leds()
+animation_creator.set_light(5, [0, 255, 0])
+
+for column in range(total_columns):
+    animation_creator.fade_light(led_matrix[:,column], [255,0,0], 1)
+    animation_creator.wait_for_all_leds()
+
+for row in range(total_rows):
+    animation_creator.fade_light(led_matrix[row,:], [0,0,255], 0.5)
+    animation_creator.wait_for_all_leds()
 
 
 #################
@@ -87,8 +88,6 @@ animation_creator.wait_for_all_leds()
 
 animation_creator.wait_for_all_leds()
 
-
-print(animation_creator.animation_row_pointers)
 #animation_creator.print_animation()
 
 
@@ -103,7 +102,7 @@ animation.create_circular_layout(spacing=17, led_radius=4)
 animation.run_preview(start_time=start_time)
 
 ################################
-# Create animations here. Example animations are commented out
+# Example animations are commented out
 
 '''
 # turn off and stay off (animation_0)
@@ -111,7 +110,7 @@ animation_creator.fade_light(led_matrix[:, :], [0,0,0], 2)
 animation_creator.wait_for_all_leds()
 '''
 
-# fade through columns
+'''# fade through columns
 animation_creator.fade_light(led_matrix[:, 7], [0,0,0], 2)
 animation_creator.fade_light(led_matrix[:, 0], [10,0,200], 2)
 animation_creator.wait_for_all_leds()
@@ -121,7 +120,7 @@ for i in range(7):
     animation_creator.fade_light(led_matrix[:, i+1], [0,0,200], 2)
     animation_creator.wait_for_all_leds()
 
-animation_creator.wait_for_all_leds()
+animation_creator.wait_for_all_leds()'''
 
 
 '''
@@ -246,8 +245,8 @@ animation_creator.fade_light(led_matrix[16, :], [0,0,0], 0.1)
 animation_creator.fade_light(led_matrix[6, :], [0,0,0], 0.1)'''
 
 
-'''
-# static rainbow
+
+'''# static rainbow
 total_steps = 50
 for step in range(total_steps):
     color_shift = 255/total_steps*5
