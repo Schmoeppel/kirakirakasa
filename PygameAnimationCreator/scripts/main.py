@@ -7,7 +7,7 @@ import random
 fps = 20
 speed = 1.0
 start_time = 0.0
-file_name = "10_animation"
+file_name = "animation_12"
 led_matrix = np.array([ [16, 51, 84, 119, 17, 50, 85, 118],
                         [15, 52, 83, 120, 18, 49, 86, 117],
                         [14, 53, 82, 121, 19, 48, 87, 116],
