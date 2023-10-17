@@ -33,17 +33,6 @@ pygame.init()
 animation_creator = AnimationCreator(num_leds, fps, speed)
 
 
-#Create Sequence here ==================
-''' 
-examples
-animation_creator.set_light(led_matrix[3:, 0:2], [1,200,3])
-animation_creator.wait(led_matrix[:, :], 3)
-animation_creator.fade_light(led_matrix[:, 4:], [10,0,10], 10)
-animation_creator.wait_for_all_leds()
-'''
-
-####################
-
 def random_color():
     color_choose = random.randint(0,3)
     if color_choose == 0:
@@ -83,15 +72,6 @@ total_columns = 8
 highest_row = total_rows - 1
 highest_column = total_columns - 1
 
-
-#for color_idx in range(255):
-#    animation_creator.set_light(led_matrix[0, :], rainbow_color2(color_idx))
-
-
-#animation_creator.fade_light(led_matrix[:, 7], [0,0,0], 2)
-#animation_creator.fade_light(led_matrix[:, 0], [10,0,200], 2)
-#animation_creator.wait_for_all_leds()
-
 total_steps = 10
 for step in range(total_steps):
     color_shift = 255/total_steps*1
@@ -122,6 +102,8 @@ animation.create_binary(file_name)
 animation.create_circular_layout(spacing=17, led_radius=4)
 animation.run_preview(start_time=start_time)
 
+################################
+# Create animations here. Example animations are commented out
 
 '''
 # turn off and stay off (animation_0)
@@ -129,8 +111,6 @@ animation_creator.fade_light(led_matrix[:, :], [0,0,0], 2)
 animation_creator.wait_for_all_leds()
 '''
 
-
-'''
 # fade through columns
 animation_creator.fade_light(led_matrix[:, 7], [0,0,0], 2)
 animation_creator.fade_light(led_matrix[:, 0], [10,0,200], 2)
@@ -142,7 +122,7 @@ for i in range(7):
     animation_creator.wait_for_all_leds()
 
 animation_creator.wait_for_all_leds()
-'''
+
 
 '''
 # fade through all rows

@@ -41,7 +41,6 @@ class Animation:
                     if val == 10: #
                         val = 11
                     packed_value = struct.pack('B', val)
-                    #f.write(val.to_bytes(1, 'big'))
                     f.write(packed_value)
                 f.write(b'\n')
 
@@ -52,8 +51,6 @@ class Animation:
                 for color in rows:
                     f.write(np.array2string(color) + "\t")
                 f.write("\n")
-        #np.savetxt("test.txt", self.sequence.reshape(-1, self.sequence.shape[-1]), delimiter=", ", fmt="%d")
-
 
     def run_preview(self, start_time=0):
         sequence_step = 0 + start_time*self.fps

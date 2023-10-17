@@ -61,11 +61,6 @@ class AnimationCreator:
 
     def _set_led_in_seq(self, led_idx, color):
         led_idx = self._idx2array(led_idx)
-        #color = self._color2array(color)
-        
-        
-        #color = color.reshape(-1, color.shape[-1])
-
         for single_led in led_idx:
             row = self.animation_row_pointers[single_led]
             if row > self.row_cnt-1:
@@ -78,12 +73,6 @@ class AnimationCreator:
             idx = np.array([idx])
         idx = idx.flatten()
         return idx
-
-    #def _color2array(self, color):
-    #    if color.ndim == 1:
-    #        color = np.array([color])
-    #    return color
-
 
     def _add_empty_line(self):
         self.animation_sequence = np.vstack((self.animation_sequence, 
