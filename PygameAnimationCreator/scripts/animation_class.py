@@ -32,7 +32,7 @@ class Animation:
 
     def create_binary(self, file_name):
         # Navigate to the parent folder of the current folder
-        parent_folder = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+        parent_folder = os.path.abspath(os.path.join(os.getcwd(), os.pardir)) + "/KiraKiraKasa/PygameAnimationCreator"
         with open(os.path.join(parent_folder, "animation_files/"+file_name+".txt"), 'wb') as f:
             for row in self.sequence:
                 row = row.flatten()
