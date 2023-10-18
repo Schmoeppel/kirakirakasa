@@ -1,5 +1,5 @@
 # KiraKiraKasa (Led Umbrella)
-This is a just for fun project to add leds to an ubrella and play preprogrammed animations from an SD card. The animations can be created and verified with a small Simulator I wrote in python using the pygame library or visualization.
+This is a just-for-fun-project to add leds to an umbrella and play preprogrammed animations from an SD card. The animations can be created and verified with a small Simulator I wrote in python using the pygame library or visualization.
 
 # What can you do with it?
 When you push a button the leds on the umbrella will start looping through an animation. pushing the button again will switch to the next animation.
